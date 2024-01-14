@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      One
   other-modules:
       Paths_aoc2023
   autogen-modules:
@@ -35,6 +36,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , hspec
   default-language: Haskell2010
 
 executable aoc2023-exe
@@ -49,12 +51,14 @@ executable aoc2023-exe
   build-depends:
       aoc2023
     , base >=4.7 && <5
+    , hspec
   default-language: Haskell2010
 
 test-suite aoc2023-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      TestOne
       Paths_aoc2023
   autogen-modules:
       Paths_aoc2023
@@ -64,4 +68,5 @@ test-suite aoc2023-test
   build-depends:
       aoc2023
     , base >=4.7 && <5
+    , hspec
   default-language: Haskell2010

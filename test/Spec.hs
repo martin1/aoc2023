@@ -1,2 +1,5 @@
+import TestOne(testOne)
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+    testOne
