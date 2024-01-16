@@ -1,6 +1,5 @@
 module Main (main) where
 
-import Lib
 import System.Environment (getArgs,getProgName)
 import System.IO (hPutStrLn,stderr)
 import One (getResult)
@@ -11,7 +10,7 @@ main = do
     case args of
         [num, filePath] | [(n,_)] <- reads num -> 
             case n of
-                1 -> (getResult filePath) >>= print
+                1 -> (getResult filePath False) >>= print
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
