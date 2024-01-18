@@ -1,8 +1,6 @@
 module One (getResult) where
 import Data.Char (isDigit)
-import qualified Data.Text as T
-import Data.Ord ( Down(Down), comparing )
-import Data.List(sortBy)
+import Data.List(isPrefixOf)
 
 getResult :: String -> Bool -> IO Int
 getResult path replaceDigitWords = do
@@ -18,10 +16,11 @@ getCalibrationValue replaceWords s = read v :: Int
 
 
 replaceNumWords :: String -> String
-replaceNumWords s = T.unpack $ foldr (\(k, v) res ->  T.replace (T.pack k) (T.pack v) res) (T.pack s) sortedDigitMap
-
-sortedDigitMap :: [(String, String)]
-sortedDigitMap = sortBy (comparing (\(k, v) -> ((length k), v))) digitMap
+replaceNumWords [] = []
+replaceNumWords s = head (replaceAllNums s) : replaceNumWords (tail (replaceAllNums s))
+    where
+        replaceNumPrefix (k, v) str = if k `isPrefixOf` s then v ++ drop (length k) str else str
+        replaceAllNums str = foldr replaceNumPrefix str digitMap
 
 digitMap :: [(String, String)]
 digitMap = [

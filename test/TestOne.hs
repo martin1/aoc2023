@@ -8,5 +8,5 @@ testOne = hspec $ do
         it "getResult digits only" $ do
             getResult "test/data/one_1.txt" False `shouldReturn` 142
         it "getResult replace words with digits" $ do
-            getResult "test/data/one_2.txt" False `shouldReturn` 281
+            getResult "test/data/one_2.txt" True `shouldReturn` 281
             
