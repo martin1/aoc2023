@@ -10,12 +10,14 @@ main = do
     case args of
         [num, filePath] | [(n,_)] <- reads num ->
             case n of
-                1 -> do
+                1 ->
+                    do
                     putStrLn "Day 1 part 1: "
                     getResult filePath False >>= print
-                    
+
                     putStrLn "Day 1 part 2: "
                     getResult filePath True >>= print
+                    
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName

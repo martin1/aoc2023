@@ -3,9 +3,7 @@ import Data.Char (isDigit)
 import Data.List(isPrefixOf)
 
 getResult :: String -> Bool -> IO Int
-getResult path replaceDigitWords = do
-    content <- readFile path
-    return $ sum $ fmap (getCalibrationValue replaceDigitWords) (lines content)
+getResult path replaceDigitWords = sum . fmap (getCalibrationValue replaceDigitWords) . lines <$> readFile path
 
 getCalibrationValue :: Bool -> String -> Int
 getCalibrationValue replaceWords s = read v :: Int
