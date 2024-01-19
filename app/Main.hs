@@ -1,6 +1,5 @@
 module Main (main) where
 
-import Lib
 import System.Environment (getArgs,getProgName)
 import System.IO (hPutStrLn,stderr)
 import One (getResult)
@@ -9,9 +8,16 @@ main :: IO ()
 main = do
     args <- getArgs
     case args of
-        [num, filePath] | [(n,_)] <- reads num -> 
+        [num, filePath] | [(n,_)] <- reads num ->
             case n of
-                1 -> (getResult filePath) >>= print
+                1 ->
+                    do
+                    putStrLn "Day 1 part 1: "
+                    getResult filePath False >>= print
+
+                    putStrLn "Day 1 part 2: "
+                    getResult filePath True >>= print
+                    
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName

@@ -5,6 +5,8 @@ import Test.Hspec
 testOne :: IO ()
 testOne = hspec $ do
     describe "One" $ do
-        it "getResutlt" $ do
-            getResult "test/data/input_one.txt" `shouldReturn` 142
+        it "getResult digits only" $ do
+            getResult "test/data/one_1.txt" False `shouldReturn` 142
+        it "getResult replace words with digits" $ do
+            getResult "test/data/one_2.txt" True `shouldReturn` 281
             
