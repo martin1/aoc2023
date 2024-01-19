@@ -17,7 +17,7 @@ replaceNumWords :: String -> String
 replaceNumWords [] = []
 replaceNumWords s = head (replaceAllNums s) : replaceNumWords (tail (replaceAllNums s))
     where
-        replaceNumPrefix (k, v) str = if k `isPrefixOf` s then v ++ drop (length k) str else str
+        replaceNumPrefix (k, v) str = if k `isPrefixOf` s then v ++ tail str else str
         replaceAllNums str = foldr replaceNumPrefix str digitMap
 
 digitMap :: [(String, String)]
