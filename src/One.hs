@@ -3,13 +3,16 @@ import Data.Char (isDigit)
 import Data.List(isPrefixOf)
 
 getResult :: String -> Bool -> IO Int
-getResult path replaceDigitWords = sum . fmap (getCalibrationValue replaceDigitWords) . lines <$> readFile path
-
-getCalibrationValue :: Bool -> String -> Int
-getCalibrationValue replaceWords s = read v :: Int
+getResult path replaceDigitWords = sum . fmap f . lines <$> readFile path
     where
-        str = if replaceWords then replaceNumWords s else s
-        digits = [x | x <- str, isDigit x]
+        f :: String -> Int
+        f = if replaceDigitWords then getCalVal . replaceNumWords else getCalVal
+
+-- get calibration value
+getCalVal :: String -> Int
+getCalVal s = read v :: Int
+    where
+        digits = [x | x <- s, isDigit x]
         v = head digits : [last digits]
 
 
