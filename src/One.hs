@@ -1,6 +1,6 @@
 module One (getResult) where
 import Data.Char (isDigit)
-import Data.List(isPrefixOf)
+import Data.List (isPrefixOf)
 
 getResult :: String -> Bool -> IO Int
 getResult path replaceDigitWords = sum . fmap f . lines <$> readFile path
