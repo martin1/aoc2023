@@ -1,23 +1,28 @@
 module Two where
-import Types(Bag(..))
-import Data.Char (isDigit)
-import Data.List (isPrefixOf, isSuffixOf)
-import Data.Text (splitOn)
+import Data.List.Split
+
+data Bag = Bag {
+    red :: Int,
+    blue :: Int,
+    green :: Int
+} deriving (Eq, Show)
+
+type GameData = [String]
+
+gamePrefix :: String
+gamePrefix = "Game "
+
+
+getGameData :: String -> (Int, [GameData])
+getGameData s = (gameId, games)
+    where
+        splitResult = splitOn ": " s
+        gameId = read $ drop (length gamePrefix) (head splitResult)
+        games = splitOn "; " (last splitResult)
 
 -- getResult :: String -> Bag -> IO Int
 -- getResult s = 
 
--- parseBag :: [String] -> Bag
--- parseBag [] = Bag 0 0 0
--- parseBag strs = foldr f (Bag 0 0 0) strs
---     where
---         f s acc = suffix
---             | " red"
---             where
---                 let (n, suffix) = break (== ' ') s
---             red = " red"
---             green = " green"
---             blue = " blue"
 -- 3 blue, etc
 updateBag :: (Int, String) -> Bag -> Bag
 updateBag (n, suffix) bag
