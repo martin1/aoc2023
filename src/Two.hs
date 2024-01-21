@@ -23,7 +23,6 @@ getResult path = fmap (foldr ((\(n,g) acc -> if isGamePossible g then n + acc el
     -- let b = foldr ((\(n,g) acc -> if isGamePossible g then n + acc else acc) . getGameData) 0 ls
     -- return b
 
-
 isGamePossible :: [Bag] -> Bool
 isGamePossible = all (\b -> red b <= red fullBag && green b <= green fullBag && blue b <= blue fullBag)
 
