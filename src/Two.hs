@@ -16,12 +16,22 @@ fullBag :: Bag
 fullBag = Bag {red = 12, green = 13, blue = 14}
 
 
-getResult :: String -> IO Int
-getResult path = fmap (foldr ((\(n,g) acc -> if isGamePossible g then n + acc else acc) . getGameData) 0) (lines <$> readFile path)
-    -- do
-    -- ls <- lines <$> readFile path
-    -- let b = foldr ((\(n,g) acc -> if isGamePossible g then n + acc else acc) . getGameData) 0 ls
-    -- return b
+getResult :: String -> (IO Int, IO Int)
+getResult path = (res1, res2)
+    where
+        res1 = --fmap (foldr ((\(n,g) acc -> if isGamePossible g then n + acc else acc) . getGameData) 0) (lines <$> readFile path)
+            do
+            ls <- lines <$> readFile path
+            -- sum of ID-s of all possible games
+            let res = foldr ((\(n,g) acc -> if isGamePossible g then n + acc else acc) . getGameData) 0 ls
+            return res
+        res2 = do
+            ls <- lines <$> readFile path
+            let minBags = map (getMinBag . (snd . getGameData)) ls
+            -- sum of the power of all minimal bags
+            let res = foldr (\bag acc -> acc + (red bag * green bag * blue bag)) 0 minBags
+            return res
+    
 
 isGamePossible :: [Bag] -> Bool
 isGamePossible = all (\b -> red b <= red fullBag && green b <= green fullBag && blue b <= blue fullBag)
@@ -33,6 +43,15 @@ getGameData s = (gameId, gameData)
         gameId = read $ drop (length gamePrefix) (head splitResult)
         games = splitOn "; " (last splitResult)
         gameData = map (createBag . splitOn ", ") games
+
+getMinBag :: [Bag] -> Bag
+getMinBag bags = foldr f (head bags) bags
+    where
+        f bag acc = acc {
+            red = max (red acc) (red bag),
+            green = max (green acc) (green bag),
+            blue = max (blue acc) (blue bag)
+        }
 
 createBag :: [String] -> Bag
 createBag = updateBag (Bag 0 0 0)

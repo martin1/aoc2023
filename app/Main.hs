@@ -19,9 +19,12 @@ main = do
                     putStrLn "Day 1 part 2: "
                     One.getResult2 filePath >>= print
                     
-                2 ->do
-                    putStrLn "Day 2: "
-                    Two.getResult filePath >>= print
+                2 -> do
+                    let (res1, res2) = Two.getResult filePath
+                    putStrLn "Day 2 part 1: "
+                    res1 >>= print
+                    putStrLn "Day 2 part 2: "
+                    res2 >>= print
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
