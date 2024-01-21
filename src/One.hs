@@ -1,12 +1,13 @@
-module One (getResult) where
+module One (getResult1, getResult2) where
 import Data.Char (isDigit)
-import Data.List(isPrefixOf)
+import Data.List (isPrefixOf)
 
-getResult :: String -> Bool -> IO Int
-getResult path replaceDigitWords = sum . fmap f . lines <$> readFile path
-    where
-        f :: String -> Int
-        f = if replaceDigitWords then getCalVal . replaceNumWords else getCalVal
+getResult1 :: String -> IO Int
+getResult1 path = sum . fmap getCalVal . lines <$> readFile path
+
+getResult2 :: String -> IO Int
+getResult2 path = sum . fmap (getCalVal . replaceNumWords) . lines <$> readFile path
+
 
 -- get calibration value
 getCalVal :: String -> Int

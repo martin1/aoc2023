@@ -2,7 +2,8 @@ module Main (main) where
 
 import System.Environment (getArgs,getProgName)
 import System.IO (hPutStrLn,stderr)
-import One (getResult)
+import One (getResult1,getResult2)
+import Two (getResult)
 
 main :: IO ()
 main = do
@@ -13,11 +14,17 @@ main = do
                 1 ->
                     do
                     putStrLn "Day 1 part 1: "
-                    getResult filePath False >>= print
+                    One.getResult1 filePath >>= print
 
                     putStrLn "Day 1 part 2: "
-                    getResult filePath True >>= print
+                    One.getResult2 filePath >>= print
                     
+                2 -> do
+                    let (res1, res2) = Two.getResult filePath
+                    putStrLn "Day 2 part 1: "
+                    res1 >>= print
+                    putStrLn "Day 2 part 2: "
+                    res2 >>= print
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
