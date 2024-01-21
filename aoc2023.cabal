@@ -61,6 +61,7 @@ test-suite aoc2023-test
   main-is: Spec.hs
   other-modules:
       TestOne
+      TestTwo
       Paths_aoc2023
   autogen-modules:
       Paths_aoc2023
