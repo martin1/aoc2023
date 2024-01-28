@@ -9,7 +9,7 @@ main :: IO ()
 main = do
     args <- getArgs
     case args of
-        [num, filePath] | [(n,_)] <- reads num ->
+        [num, filePath] | [(n,_)] <- (reads num :: [(Int, String)]) ->
             case n of
                 1 ->
                     do
