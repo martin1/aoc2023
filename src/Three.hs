@@ -3,29 +3,43 @@ module Three() where
 import Data.Char (isDigit)
 import Data.List.Split (split)
 import Data.List.Split.Internals (whenElt)
-import Data.List (partition)
+import Data.List (partition, intersect)
 
 
-getResult :: [String] -> ([(String, (Int, Int))], [(Int, Int)])
-getResult ls = foldr f ([], []) (zip ls [0..])
+data NumWithCoords = NumWithCoords
+    { num :: String
+    , coords :: (Int, Int)
+    } deriving (Show)
+
+type SymbolsAt = [(Int, Int)]
+
+getBounds:: NumWithCoords -> [(Int, Int)]
+getBounds (NumWithCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
+
+sumNums :: [NumWithCoords] -> Int
+sumNums = sum . map ((\n -> read n :: Int) . num)
+
+filterNums :: ([NumWithCoords], SymbolsAt) -> [NumWithCoords]
+filterNums (nums, symbolsAt) = filter symbolInBounds nums
     where
-        f (s, i) (nums, symbolsAt) = (nums ++ lineNums, symbolsAt ++ lineSymbolsAt)
-            where
-                (lineNums, lineSymbolsAt) = getLineData s i
+        symbolInBounds :: NumWithCoords -> Bool
+        symbolInBounds ns = (not . null) $ symbolsAt `intersect` getBounds ns
 
-
-
-getLineData :: String -> Int -> ([(String, (Int, Int))], [(Int, Int)])
-getLineData s i = (numberCoords, symbolCoords)
+parseLineData :: (String, Int) -> ([NumWithCoords], SymbolsAt)
+parseLineData (s, y') = (numberCoords, symbolsAt)
     where
         list = filter (not . null) (split (whenElt (not . isDigit)) s)
         --indexes need to take into account the length of the strings
-        indexes = scanl (\acc x -> acc + length x) 0 list
+        indexes = scanl (\acc e -> acc + length e) 0 list
         listIndexed = filter (\ (a, _) -> a /= ".") $ zip list indexes
         (numbers, symbols) = partition (\(a, _) -> all isDigit a) listIndexed
-        numberCoords = map (\(a, x) -> (a, (x, i))) numbers
-        symbolCoords = map (\(_, x) -> (x, i)) symbols
+        numberCoords = map (\(a, x') -> NumWithCoords a (x', y')) numbers
+        symbolsAt = map (\(_, x') -> (x', y')) symbols
 
+concatLineData :: [([NumWithCoords], SymbolsAt)] -> ([NumWithCoords], SymbolsAt)
+concatLineData = foldr f ([], [])
+    where
+        f (nums, symbolsAt) (nums', symbolsAt') = (nums' ++ nums, symbolsAt' ++ symbolsAt)
 
 testlines :: [String]
 testlines =
@@ -40,3 +54,4 @@ testlines =
     , "...$.*...."
     , ".664.598.."
     ]
+
