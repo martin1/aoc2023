@@ -4,6 +4,7 @@ import Data.Char (isDigit)
 import Data.List.Split (split)
 import Data.List.Split.Internals (whenElt)
 import Data.List (partition, intersect)
+import Data.Maybe (isJust, fromJust)
 
 data SCoords = SCoords
     { str :: String
@@ -17,13 +18,16 @@ type Symbols = [SCoords]
 getResult :: String -> (IO Int,IO Int)
 getResult path = (res1, res2)
     where
+
         res1 = do
             ls <- lines <$> readFile path
             let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
             return res
         res2 = do
-            return 0 -- TODO
-    
+            ls <- lines <$> readFile path
+            let res = sumGearRatios $ getPartNumbers $ concatLineData $ zipWith (curry parseLineData) ls [0..]
+            return res
+
 
 getBounds:: SCoords -> [(Int, Int)]
 getBounds (SCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
@@ -36,6 +40,32 @@ filterNums (numbers, symbols) = filter symbolInBounds numbers
     where
         symbolInBounds :: SCoords -> Bool
         symbolInBounds ns = (not . null) $ map xy symbols `intersect` getBounds ns
+
+getGearRatios :: (Int, Int) -> Numbers -> Maybe (SCoords, SCoords)
+getGearRatios gearCoords numbers =
+    if length matches == 2
+        then
+            Just (head matches, last matches)
+        else
+            Nothing
+    where
+        isMatch num = gearCoords `elem` getBounds num
+        matches = filter isMatch numbers
+
+
+getPartNumbers :: (Numbers, Symbols) -> [(SCoords, SCoords)]
+getPartNumbers (numbers, symbols) = foldr f [] gearCoords
+    where
+        gears = filter (\ (SCoords s _)-> s == "*") symbols
+        gearCoords = map (\ (SCoords _ coords) -> coords) gears
+        f gearCoord acc = if isJust partNumbers then fromJust partNumbers : acc else acc
+            where
+                partNumbers = getGearRatios gearCoord numbers
+
+sumGearRatios:: [(SCoords, SCoords)] -> Int
+sumGearRatios nums = sum $ map f nums
+    where
+        f (SCoords n1 _, SCoords n2 _) = (read n1 :: Int) * (read n2 :: Int)
 
 parseLineData :: (String, Int) -> (Numbers, Symbols)
 parseLineData (s, y') = (numberCoords, symbolsAt)
