@@ -1,4 +1,4 @@
-module Three() where
+module Three(getResult) where
 
 import Data.Char (isDigit)
 import Data.List.Split (split)
@@ -12,6 +12,12 @@ data NumWithCoords = NumWithCoords
     } deriving (Show)
 
 type SymbolsAt = [(Int, Int)]
+
+getResult :: String -> IO Int
+getResult path = do
+    ls <- lines <$> readFile path
+    let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
+    return res
 
 getBounds:: NumWithCoords -> [(Int, Int)]
 getBounds (NumWithCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
@@ -40,18 +46,3 @@ concatLineData :: [([NumWithCoords], SymbolsAt)] -> ([NumWithCoords], SymbolsAt)
 concatLineData = foldr f ([], [])
     where
         f (nums, symbolsAt) (nums', symbolsAt') = (nums' ++ nums, symbolsAt' ++ symbolsAt)
-
-testlines :: [String]
-testlines =
-    [ "467..114.."
-    , "...*......"
-    , "..35..633."
-    , "......#..."
-    , "617*......"
-    , ".....+.58."
-    , "..592....."
-    , "......755."
-    , "...$.*...."
-    , ".664.598.."
-    ]
-

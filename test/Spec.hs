@@ -1,11 +1,13 @@
 import One(getResult1,getResult2)
 import Two(getResult)
-import Test.Hspec
+import Three(getResult)
+import Test.Hspec ( hspec, describe, it, shouldReturn )
 
 main :: IO ()
 main = do
     testOne
     testTwo
+    testThree
 
 
 testOne :: IO ()
@@ -24,3 +26,9 @@ testTwo = hspec $ do
             res1 `shouldReturn` 8
         it "res2" $ do
             res2 `shouldReturn` 2286
+
+testThree :: IO ()
+testThree = hspec $ do
+    describe "Three" $ do
+        it "getResult" $ do
+            Three.getResult "test/input/3.txt" `shouldReturn` 4361
