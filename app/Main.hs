@@ -4,6 +4,7 @@ import System.Environment (getArgs,getProgName)
 import System.IO (hPutStrLn,stderr)
 import One (getResult1,getResult2)
 import Two (getResult)
+import Three (getResult)
 
 main :: IO ()
 main = do
@@ -25,6 +26,9 @@ main = do
                     res1 >>= print
                     putStrLn "Day 2 part 2: "
                     res2 >>= print
+                3 -> do
+                    putStrLn "Day 3: "
+                    Three.getResult filePath >>= print
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
