@@ -13,9 +13,9 @@ main = do
 testOne :: IO ()
 testOne = hspec $ do
     describe "One" $ do
-        it "getResult1" $ do
+        it "res1" $ do
             getResult1 "test/input/1_1.txt" `shouldReturn` 142
-        it "getResult2" $ do
+        it "res2" $ do
             getResult2 "test/input/1_2.txt" `shouldReturn` 281
 
 testTwo :: IO ()
@@ -30,5 +30,8 @@ testTwo = hspec $ do
 testThree :: IO ()
 testThree = hspec $ do
     describe "Three" $ do
-        it "getResult" $ do
-            Three.getResult "test/input/3.txt" `shouldReturn` 4361
+        let (res1, res2) = Three.getResult "test/input/3.txt"
+        it "res1" $ do
+            res1 `shouldReturn` 4361
+        it "res2" $ do
+            res2 `shouldReturn` 467835

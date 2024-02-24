@@ -27,8 +27,11 @@ main = do
                     putStrLn "Day 2 part 2: "
                     res2 >>= print
                 3 -> do
-                    putStrLn "Day 3: "
-                    Three.getResult filePath >>= print
+                    let (res1, res2) = Three.getResult filePath
+                    putStrLn "Day 3 part 1: "
+                    res1 >>= print
+                    putStrLn "Day 3 part 2: "
+                    res2 >>= print
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName

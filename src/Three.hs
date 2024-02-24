@@ -13,11 +13,16 @@ data NumWithCoords = NumWithCoords
 
 type SymbolsAt = [(Int, Int)]
 
-getResult :: String -> IO Int
-getResult path = do
-    ls <- lines <$> readFile path
-    let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
-    return res
+getResult :: String -> (IO Int,IO Int)
+getResult path = (res1, res2)
+    where
+        res1 = do
+            ls <- lines <$> readFile path
+            let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
+            return res
+        res2 = do
+            return 0
+    
 
 getBounds:: NumWithCoords -> [(Int, Int)]
 getBounds (NumWithCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
