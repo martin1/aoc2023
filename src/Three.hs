@@ -5,13 +5,14 @@ import Data.List.Split (split)
 import Data.List.Split.Internals (whenElt)
 import Data.List (partition, intersect)
 
-
-data NumWithCoords = NumWithCoords
-    { num :: String
-    , coords :: (Int, Int)
+data SCoords = SCoords
+    { str :: String
+    , xy :: (Int, Int)
     } deriving (Show)
 
-type SymbolsAt = [(Int, Int)]
+type Numbers = [SCoords]
+type Symbols = [SCoords]
+
 
 getResult :: String -> (IO Int,IO Int)
 getResult path = (res1, res2)
@@ -21,22 +22,22 @@ getResult path = (res1, res2)
             let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
             return res
         res2 = do
-            return 0
+            return 0 -- TODO
     
 
-getBounds:: NumWithCoords -> [(Int, Int)]
-getBounds (NumWithCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
+getBounds:: SCoords -> [(Int, Int)]
+getBounds (SCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
 
-sumNums :: [NumWithCoords] -> Int
-sumNums = sum . map ((\n -> read n :: Int) . num)
+sumNums :: Numbers -> Int
+sumNums = sum . map ((\n -> read n :: Int) . str)
 
-filterNums :: ([NumWithCoords], SymbolsAt) -> [NumWithCoords]
-filterNums (nums, symbolsAt) = filter symbolInBounds nums
+filterNums :: (Numbers, Symbols) -> [SCoords]
+filterNums (numbers, symbols) = filter symbolInBounds numbers
     where
-        symbolInBounds :: NumWithCoords -> Bool
-        symbolInBounds ns = (not . null) $ symbolsAt `intersect` getBounds ns
+        symbolInBounds :: SCoords -> Bool
+        symbolInBounds ns = (not . null) $ map xy symbols `intersect` getBounds ns
 
-parseLineData :: (String, Int) -> ([NumWithCoords], SymbolsAt)
+parseLineData :: (String, Int) -> (Numbers, Symbols)
 parseLineData (s, y') = (numberCoords, symbolsAt)
     where
         list = filter (not . null) (split (whenElt (not . isDigit)) s)
@@ -44,10 +45,10 @@ parseLineData (s, y') = (numberCoords, symbolsAt)
         indexes = scanl (\acc e -> acc + length e) 0 list
         listIndexed = filter (\ (a, _) -> a /= ".") $ zip list indexes
         (numbers, symbols) = partition (\(a, _) -> all isDigit a) listIndexed
-        numberCoords = map (\(a, x') -> NumWithCoords a (x', y')) numbers
-        symbolsAt = map (\(_, x') -> (x', y')) symbols
+        numberCoords = map (\(a, x') -> SCoords a (x', y')) numbers
+        symbolsAt = map (\(a, x') -> SCoords a (x', y')) symbols
 
-concatLineData :: [([NumWithCoords], SymbolsAt)] -> ([NumWithCoords], SymbolsAt)
+concatLineData :: [(Numbers, Symbols)] -> (Numbers, Symbols)
 concatLineData = foldr f ([], [])
     where
         f (nums, symbolsAt) (nums', symbolsAt') = (nums' ++ nums, symbolsAt' ++ symbolsAt)
