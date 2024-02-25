@@ -42,12 +42,9 @@ filterNums (numbers, symbols) = filter symbolInBounds numbers
 -- #region part 2
 
 getGearRatios :: (Int, Int) -> Numbers -> Maybe (SCoords, SCoords)
-getGearRatios gearCoords numbers =
-    if length matches == 2
-        then
-            Just (head matches, last matches)
-        else
-            Nothing
+getGearRatios gearCoords numbers
+    | length matches == 2 = Just (head matches, last matches)
+    | otherwise = Nothing
     where
         isMatch num = gearCoords `elem` getBounds num
         matches = filter isMatch numbers
