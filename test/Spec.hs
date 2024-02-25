@@ -1,7 +1,7 @@
 import One(getResult1,getResult2)
 import Two(getResult)
 import Three(getResult)
-import Test.Hspec ( hspec, describe, it, shouldReturn )
+import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
 
 main :: IO ()
 main = do
@@ -21,17 +21,17 @@ testOne = hspec $ do
 testTwo :: IO ()
 testTwo = hspec $ do
     describe "Two" $ do
-        let (res1, res2) = Two.getResult "test/input/2.txt"
+        (res1, res2) <- runIO $ Two.getResult "test/input/2.txt"
         it "res1" $ do
-            res1 `shouldReturn` 8
+            res1 `shouldBe` 8
         it "res2" $ do
-            res2 `shouldReturn` 2286
+            res2 `shouldBe` 2286
 
 testThree :: IO ()
 testThree = hspec $ do
     describe "Three" $ do
-        let (res1, res2) = Three.getResult "test/input/3.txt"
+        (res1, res2) <- runIO $ Three.getResult "test/input/3.txt"
         it "res1" $ do
-            res1 `shouldReturn` 4361
+            res1 `shouldBe` 4361
         it "res2" $ do
-            res2 `shouldReturn` 467835
+            res2 `shouldBe` 467835

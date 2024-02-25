@@ -21,17 +21,17 @@ main = do
                     One.getResult2 filePath >>= print
                     
                 2 -> do
-                    let (res1, res2) = Two.getResult filePath
+                    (res1, res2) <- Two.getResult filePath
                     putStrLn "Day 2 part 1: "
-                    res1 >>= print
+                    print res1
                     putStrLn "Day 2 part 2: "
-                    res2 >>= print
+                    print res2
                 3 -> do
-                    let (res1, res2) = Three.getResult filePath
+                    (res1, res2) <- Three.getResult filePath
                     putStrLn "Day 3 part 1: "
-                    res1 >>= print
+                    print res1
                     putStrLn "Day 3 part 2: "
-                    res2 >>= print
+                    print res2
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName

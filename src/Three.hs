@@ -15,19 +15,13 @@ type Numbers = [SCoords]
 type Symbols = [SCoords]
 
 
-getResult :: String -> (IO Int,IO Int)
-getResult path = (res1, res2)
-    where
-
-        res1 = do
-            ls <- lines <$> readFile path
-            let res = sumNums $ filterNums $ concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
-            return res
-        res2 = do
-            ls <- lines <$> readFile path
-            let res = sumGearRatios $ getPartNumbers $ concatLineData $ zipWith (curry parseLineData) ls [0..]
-            return res
-
+getResult :: String -> IO (Int, Int)
+getResult path = do
+    ls <- lines <$> readFile path
+    let lineData = concatLineData $ zipWith (curry parseLineData) ls [0..] --map parseLineData $ zip ls [0..]
+    let res1 = sumNums $ filterNums lineData 
+    let res2 = sumGearRatios $ getPartNumbers lineData
+    return (res1, res2)
 
 getBounds:: SCoords -> [(Int, Int)]
 getBounds (SCoords s (x, y)) = [(x', y') |  x' <- [x-1..x + length s], y' <- [y-1..y+1]]
