@@ -4,12 +4,12 @@ import Data.List (intersect)
 type WinningNumbers = [Int]
 type LocalNumbers = [Int]
 
---getResult :: String -> Int
-getResult :: String -> IO Int
+getResult :: String -> IO (Int, Int)
 getResult path = do
     ls <- lines <$> readFile path
-    let res = foldr (\l acc -> acc + getLinePoints l) 0 ls
-    return res
+    let res1 = foldr (\l acc -> acc + getLinePoints l) 0 ls
+    let res2 = 0
+    return (res1, res2)
 
 
 getLinePoints :: String -> Int

@@ -34,9 +34,11 @@ main = do
                     putStrLn "Day 3 part 2: "
                     print res2
                 4 -> do
-                    res <- Four.getResult filePath
-                    putStrLn "Day 4: "
-                    print res
+                    (res1, res2) <- Four.getResult filePath
+                    putStrLn "Day 4 part 1: "
+                    print res1
+                    putStrLn "Day 4 part 2: "
+                    print res2
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName

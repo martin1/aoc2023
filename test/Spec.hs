@@ -41,5 +41,8 @@ testThree = hspec $ do
 testFour :: IO ()
 testFour = hspec $ do
     describe "Four" $ do
-        it "res" $ do
-            Four.getResult "test/input/4.txt" `shouldReturn` 13
+        (res1, res2) <- runIO $ Four.getResult "test/input/4.txt"
+        it "res1" $ do
+            res1 `shouldBe` 13
+        it "res2" $ do
+            res2 `shouldBe` 0 --TODO
