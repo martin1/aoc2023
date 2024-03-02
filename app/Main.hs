@@ -44,4 +44,4 @@ main = do
                 _ -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
-            hPutStrLn stderr $ "usage: " ++ name ++ " <integer>"
+            hPutStrLn stderr $ "usage: " ++ name ++ " <day-number>"
