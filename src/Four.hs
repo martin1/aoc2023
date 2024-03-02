@@ -1,5 +1,7 @@
 module Four(getResult) where
 import Data.List (intersect)
+import Data.Tree (Tree, unfoldTree)
+import Data.Maybe (fromMaybe)
 
 type WinningNumbers = [Int]
 type LocalNumbers = [Int]
@@ -45,6 +47,12 @@ getLineMatchCount :: (Int, String) -> (LineNo, MatchCount)
 getLineMatchCount (index, line) = (index, matchCount line)
     where
         matchCount = length . getWinningNumbers . getLineNumbers
+
+buildTree :: LineNo -> [(LineNo, MatchCount)] -> Tree Int
+buildTree lineNo matches = unfoldTree buildNode lineNo
+    where
+        buildNode i = if getMatchCount i == 0 then (i, []) else (i, [i+1..getMatchCount i + 1])
+        getMatchCount i = fromMaybe 0 (lookup i matches)
 
 testLines :: [String]
 testLines = [
