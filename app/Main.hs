@@ -5,6 +5,7 @@ import System.IO (hPutStrLn,stderr)
 import One (getResult1,getResult2)
 import Two (getResult)
 import Three (getResult)
+import Four (getResult)
 
 main :: IO ()
 main = do
@@ -31,6 +32,12 @@ main = do
                     putStrLn "Day 3 part 1: "
                     print res1
                     putStrLn "Day 3 part 2: "
+                    print res2
+                4 -> do
+                    (res1, res2) <- Four.getResult filePath
+                    putStrLn "Day 4 part 1: "
+                    print res1
+                    putStrLn "Day 4 part 2: "
                     print res2
                 _ -> putStrLn "Not implemented"
         _ -> do

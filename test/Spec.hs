@@ -1,6 +1,7 @@
 import One(getResult1,getResult2)
 import Two(getResult)
 import Three(getResult)
+import Four(getResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
 
 main :: IO ()
@@ -8,6 +9,7 @@ main = do
     testOne
     testTwo
     testThree
+    testFour
 
 
 testOne :: IO ()
@@ -35,3 +37,12 @@ testThree = hspec $ do
             res1 `shouldBe` 4361
         it "res2" $ do
             res2 `shouldBe` 467835
+
+testFour :: IO ()
+testFour = hspec $ do
+    describe "Four" $ do
+        (res1, res2) <- runIO $ Four.getResult "test/input/4.txt"
+        it "res1" $ do
+            res1 `shouldBe` 13
+        it "res2" $ do
+            res2 `shouldBe` 30
