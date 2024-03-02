@@ -45,4 +45,4 @@ testFour = hspec $ do
         it "res1" $ do
             res1 `shouldBe` 13
         it "res2" $ do
-            res2 `shouldBe` 0 --TODO
+            res2 `shouldBe` 30
