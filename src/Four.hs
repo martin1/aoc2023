@@ -51,7 +51,9 @@ getLineMatchCount (index, line) = (index, matchCount line)
 buildTree :: LineNo -> [(LineNo, MatchCount)] -> Tree Int
 buildTree lineNo matches = unfoldTree buildNode lineNo
     where
-        buildNode i = if getMatchCount i == 0 then (i, []) else (i, [i+1..getMatchCount i + 1])
+        buildNode i = if getMatchCount i == 0 
+            then (i, []) 
+            else (i, [i+1.. i + getMatchCount i])
         getMatchCount i = fromMaybe 0 (lookup i matches)
 
 testLines :: [String]
