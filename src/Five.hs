@@ -1,6 +1,7 @@
 module Five (getResult) where
 import Data.Char (isDigit)
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, elemIndex)
+import Data.Maybe (fromJust, isNothing)
 
 
 data MapRange = MapRange {
@@ -18,9 +19,6 @@ getSeeds s = if "seeds: " `isPrefixOf` s
     else error "Invalid input: seeds not found"
 
 
---50 98 2
---52 50 48
-
 getNumbers :: String -> [Int]
 getNumbers s = map read $ filter (all isDigit) $ words s
 
@@ -35,3 +33,16 @@ getMapRange s = if length nums /= 3
         }
     where
         nums = getNumbers s
+
+getMapValue :: MapRange -> Int -> Maybe Int
+getMapValue range n = 
+    if isNothing index
+        then
+            Nothing
+        else
+            Just (destList !! fromJust index)
+    where
+        sourceList = [(sourceStart range) .. (sourceStart range + len range - 1)]
+        index = elemIndex n sourceList
+        destList = [(destStart range) .. (destStart range + len range - 1)]
+
