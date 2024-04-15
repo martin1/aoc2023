@@ -1,7 +1,7 @@
 module Five (getResult) where
 import Data.Char (isDigit)
 import Data.List (isPrefixOf, elemIndex)
-import Data.Maybe (fromJust, isNothing)
+import Data.Maybe (fromJust, isNothing, fromMaybe)
 
 
 data MapRange = MapRange {
@@ -34,8 +34,12 @@ getMapRange s = if length nums /= 3
     where
         nums = getNumbers s
 
-getMapValue :: MapRange -> Int -> Maybe Int
-getMapValue range n = 
+getMapValue :: [MapRange] -> Int -> Int
+getMapValue [] n = n
+getMapValue (r:rs) n = fromMaybe (getMapValue rs n) (getRangeValue r n)
+
+getRangeValue :: MapRange -> Int -> Maybe Int
+getRangeValue range n =
     if isNothing index
         then
             Nothing
