@@ -14,10 +14,12 @@ data MapRange = MapRange {
 getResult :: String -> IO (Int, Int)
 getResult path = do
     ls <- lines <$> readFile path
+
     let seeds = getSeeds $ head ls
     let maps = map snd . getMaps $ drop 2 ls
     let valuesForSeeds =  map (`valueForSeed` maps) seeds
     let res1 = minimum valuesForSeeds
+
     return (res1, 0)
 
 getSeeds:: String -> [Int]
@@ -47,15 +49,21 @@ getMapValue (r:rs) n = fromMaybe (getMapValue rs n) (getRangeValue r n)
 
 getRangeValue :: MapRange -> Int -> Maybe Int
 getRangeValue range n =
-    if isNothing index
+    if isNothing dstOffset
         then
             Nothing
         else
-            Just (destList !! fromJust index)
+            Just (n + fromJust dstOffset)
     where
-        sourceList = [(sourceStart range) .. (sourceStart range + len range - 1)]
-        index = elemIndex n sourceList
-        destList = [(destStart range) .. (destStart range + len range - 1)]
+        srcStart = sourceStart range
+        srcEnd = srcStart + len range - 1
+        dstStart = destStart range
+
+        dstOffset = if n < srcStart || n > srcEnd
+            then 
+                Nothing
+            else 
+                Just (dstStart - srcStart)
 
 getMaps :: [String] -> [(String, [MapRange])]
 getMaps ls = map f mapData
