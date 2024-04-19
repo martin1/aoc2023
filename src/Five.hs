@@ -12,7 +12,13 @@ data MapRange = MapRange {
 } deriving Show
 
 getResult :: String -> IO (Int, Int)
-getResult _ = return (0, 0) -- TODO
+getResult path = do
+    ls <- lines <$> readFile path
+    let seeds = getSeeds $ head ls
+    let maps = map snd . getMaps $ drop 2 ls
+    let valuesForSeeds =  map (`valueForSeed` maps) seeds
+    let res1 = minimum valuesForSeeds
+    return (res1, 0)
 
 getSeeds:: String -> [Int]
 getSeeds s = if "seeds: " `isPrefixOf` s
@@ -56,10 +62,16 @@ getMaps ls = map f mapData
     where
         mapData :: [[String]]
         mapData = splitOn [""] ls
-        
+
         f :: [String] -> (String, [MapRange])
         f [] = ("", [])
         f (x:xs) = (x, map getMapRange xs)
+
+
+valueForSeed:: Int -> [[MapRange]] -> Int
+valueForSeed = foldl (flip getMapValue)
+-- valueForSeed seed [] = seed
+-- valueForSeed seed (map:maps) = valueForSeed (getMapValue map seed) (maps)
 
 
 testlines :: [String]
