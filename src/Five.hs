@@ -1,7 +1,7 @@
 module Five (getResult) where
 import Data.Char (isDigit)
-import Data.List (isPrefixOf, elemIndex)
-import Data.Maybe (fromJust, isNothing, fromMaybe)
+import Data.List (isPrefixOf)
+import Data.Maybe (fromMaybe)
 import Data.List.Split (splitOn)
 
 
@@ -48,12 +48,9 @@ getMapValue [] n = n
 getMapValue (r:rs) n = fromMaybe (getMapValue rs n) (getRangeValue r n)
 
 getRangeValue :: MapRange -> Int -> Maybe Int
-getRangeValue range n =
-    if isNothing dstOffset
-        then
-            Nothing
-        else
-            Just (n + fromJust dstOffset)
+getRangeValue range n = case dstOffset of
+    Just offset -> Just (n + offset)
+    Nothing -> Nothing
     where
         srcStart = sourceStart range
         srcEnd = srcStart + len range - 1
