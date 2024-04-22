@@ -1,9 +1,10 @@
-import One(getResult1,getResult2)
+import One(dayResults)
 import Two(getResult)
 import Three(getResult)
 import Four(getResult)
-import Five(getResult)
+import Five(dayResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
+import DayResult (DayResult(..), DayResults(..))
 
 main :: IO ()
 main = do
@@ -17,10 +18,11 @@ main = do
 testOne :: IO ()
 testOne = hspec $ do
     describe "One" $ do
+        let dayRes = One.dayResults
         it "res1" $ do
-            getResult1 "test/input/1_1.txt" `shouldReturn` 142
+            (getRes1 dayRes) "test/input/1_1.txt" `shouldReturn` 142
         it "res2" $ do
-            getResult2 "test/input/1_2.txt" `shouldReturn` 281
+            (getRes2 dayRes) "test/input/1_2.txt" `shouldReturn` 281
 
 testTwo :: IO ()
 testTwo = hspec $ do
@@ -52,7 +54,7 @@ testFour = hspec $ do
 testFive :: IO ()
 testFive = hspec $ do
     describe "Five" $ do
-        (res1, res2) <- runIO $ Five.getResult "test/input/5.txt"
+        (res1, res2) <- runIO $ (getRes Five.dayResult) "test/input/5.txt"
         it "res1" $ do
             res1 `shouldBe` 35
         it "res2" $ do

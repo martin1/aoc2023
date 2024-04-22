@@ -1,6 +1,13 @@
-module One (getResult1, getResult2) where
+module One (dayResult, dayResults) where
 import Data.Char (isDigit)
 import Data.List (isPrefixOf)
+import DayResult (DayResults (..), DayResult (..))
+
+dayResults :: DayResults
+dayResults = DayResults getResult1 getResult2
+
+dayResult :: DayResult
+dayResult = DayResult getResult
 
 getResult1 :: String -> IO Int
 getResult1 path = sum . fmap getCalVal . lines <$> readFile path
@@ -8,6 +15,12 @@ getResult1 path = sum . fmap getCalVal . lines <$> readFile path
 getResult2 :: String -> IO Int
 getResult2 path = sum . fmap (getCalVal . replaceNumWords) . lines <$> readFile path
 
+
+getResult :: String -> IO (Int, Int)
+getResult path = do
+    r1 <- getResult1 path
+    r2 <- getResult2 path
+    return (r1, r2)
 
 -- get calibration value
 getCalVal :: String -> Int
