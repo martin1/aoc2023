@@ -11,22 +11,51 @@ data MapRange = MapRange {
     len :: Int
 } deriving Show
 
+data SeedList = Seeds {
+    start :: Int,
+    count :: Int
+} deriving Show
+
 getResult :: String -> IO (Int, Int)
 getResult path = do
     ls <- lines <$> readFile path
 
-    let seeds = getSeeds $ head ls
+    let seedStr = head ls
+    let seeds = getSeeds seedStr
+
     let maps = map snd . getMaps $ drop 2 ls
+
     let valuesForSeeds =  map (`valueForSeed` maps) seeds
     let res1 = minimum valuesForSeeds
 
-    return (res1, 0)
+    let seedLists = getSeeds' seedStr
+    let valuesForSeedLists = map (`valueForSeedList` maps) seedLists
+
+    let res2 = minimum valuesForSeedLists
+
+    return (res1, res2)
 
 getSeeds:: String -> [Int]
 getSeeds s = if "seeds: " `isPrefixOf` s
-    then getNumbers s
-    else error "Invalid input: seeds not found"
+    then
+        getNumbers s
+    else
+        error "Invalid input: seeds not found"
 
+getSeeds':: String -> [SeedList]
+getSeeds' s = if odd (length seeds)
+    then
+        error "Invalid input"
+    else
+        makeSeedList . getSeeds $ s
+        where
+            seeds = getSeeds s
+
+makeSeedList :: [Int] -> [SeedList]
+makeSeedList [] = []
+makeSeedList [a] = [Seeds {start = a, count = 1}]
+makeSeedList [a,b] = [Seeds {start = a, count = b}]
+makeSeedList (a:b:rest) = Seeds {start = a, count = b} : makeSeedList rest
 
 getNumbers :: String -> [Int]
 getNumbers s = map read $ filter (all isDigit) $ words s
@@ -57,9 +86,9 @@ getRangeValue range n = case dstOffset of
         dstStart = destStart range
 
         dstOffset = if n < srcStart || n > srcEnd
-            then 
+            then
                 Nothing
-            else 
+            else
                 Just (dstStart - srcStart)
 
 getMaps :: [String] -> [(String, [MapRange])]
@@ -78,41 +107,8 @@ valueForSeed = foldl (flip getMapValue)
 -- valueForSeed seed [] = seed
 -- valueForSeed seed (map:maps) = valueForSeed (getMapValue map seed) (maps)
 
-
-testlines :: [String]
-testlines = [
-    "seeds: 79 14 55 13",
-    "",
-    "seed-to-soil map:",
-    "50 98 2",
-    "52 50 48",
-    "",
-    "soil-to-fertilizer map:",
-    "0 15 37",
-    "37 52 2",
-    "39 0 15",
-    "",
-    "fertilizer-to-water map:",
-    "49 53 8",
-    "0 11 42",
-    "42 0 7",
-    "57 7 4",
-    "",
-    "water-to-light map:",
-    "88 18 7",
-    "18 25 70",
-    "",
-    "light-to-temperature map:",
-    "45 77 23",
-    "81 45 19",
-    "68 64 13",
-    "",
-    "temperature-to-humidity map:",
-    "0 69 1",
-    "1 0 69",
-    "",
-    "humidity-to-location map:",
-    "60 56 37",
-    "56 93 4",
-    ""
-    ]
+valueForSeedList:: SeedList -> [[MapRange]] -> Int
+valueForSeedList sl maps = minimum values
+    where
+        seeds = [start sl..start sl + count sl - 1]
+        values = map (`valueForSeed` maps) seeds

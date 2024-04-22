@@ -55,5 +55,5 @@ testFive = hspec $ do
         (res1, res2) <- runIO $ Five.getResult "test/input/5.txt"
         it "res1" $ do
             res1 `shouldBe` 35
-        -- it "res2" $ do
-        --     res2 `shouldBe` 12
+        it "res2" $ do
+            res2 `shouldBe` 46
