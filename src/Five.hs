@@ -1,8 +1,12 @@
-module Five (getResult) where
+module Five (dayResult) where
 import Data.Char (isDigit)
 import Data.List (isPrefixOf)
 import Data.Maybe (fromMaybe)
 import Data.List.Split (splitOn)
+import Types (DayResult(..))
+
+dayResult :: DayResult
+dayResult = DayResult 5 getResult
 
 
 data MapRange = MapRange {

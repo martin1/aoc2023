@@ -1,10 +1,14 @@
-module Three(getResult) where
+module Three(dayResult) where
 
 import Data.Char (isDigit)
 import Data.List.Split (split)
 import Data.List.Split.Internals (whenElt)
 import Data.List (partition, intersect)
 import Data.Maybe (isJust, fromJust)
+import Types (DayResult (..))
+
+dayResult :: DayResult
+dayResult = DayResult 3 getResult
 
 data SCoords = SCoords
     { str :: String

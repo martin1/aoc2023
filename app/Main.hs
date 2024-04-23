@@ -2,12 +2,23 @@ module Main (main) where
 
 import System.Environment (getArgs,getProgName)
 import System.IO (hPutStrLn,stderr)
-import One (getResult1,getResult2)
-import Two (getResult)
-import Three (getResult)
-import Four (getResult)
-import Five (getResult)
+import One (dayResult)
+import Two (dayResult)
+import Three (dayResult)
+import Four (dayResult)
+import Five (dayResult)
 import Text.Printf (printf)
+import Types (DayResult(..))
+import Data.List (find)
+
+results :: [DayResult]
+results = [
+    One.dayResult, 
+    Two.dayResult, 
+    Three.dayResult, 
+    Four.dayResult, 
+    Five.dayResult
+    ]
 
 main :: IO ()
 main = do
@@ -15,40 +26,16 @@ main = do
     case args of
         [num] | [(n,_)] <- (reads num :: [(Int, String)]) ->
             let inputFile = printf "input/%d.txt" n in
-            case n of
-                1 ->
-                    do
-                    putStrLn "Day 1 part 1: "
-                    One.getResult1 inputFile >>= print
-
-                    putStrLn "Day 1 part 2: "
-                    One.getResult2 inputFile >>= print
-
-                2 -> do
-                    (res1, res2) <- Two.getResult inputFile
-                    putStrLn "Day 2 part 1: "
-                    print res1
-                    putStrLn "Day 2 part 2: "
-                    print res2
-                3 -> do
-                    (res1, res2) <- Three.getResult inputFile
-                    putStrLn "Day 3 part 1: "
-                    print res1
-                    putStrLn "Day 3 part 2: "
-                    print res2
-                4 -> do
-                    (res1, res2) <- Four.getResult inputFile
-                    putStrLn "Day 4 part 1: "
-                    print res1
-                    putStrLn "Day 4 part 2: "
-                    print res2
-                5 -> do
-                    (res1, res2) <- Five.getResult inputFile
-                    putStrLn "Day 5 part 1: "
-                    print res1
-                    putStrLn "Day 5 part 2: "
-                    print res2
-                _ -> putStrLn "Not implemented"
+                let dayRes = find (\x -> dayNo x == n) results in
+                    case dayRes of
+                        Just res -> printRes res inputFile
+                        Nothing -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
             hPutStrLn stderr $ "usage: " ++ name ++ " <day-number>"
+
+printRes :: DayResult -> String -> IO ()
+printRes dayRes path = do
+    (res1, res2) <- getRes dayRes path
+    let n = dayNo dayRes
+    printf "Day %d part 1:\n%d\nDay %d part 2:\n%d\n" n res1 n res2

@@ -1,7 +1,11 @@
-module Four(getResult) where
+module Four(dayResult) where
 import Data.List (intersect)
 import Data.Tree (Tree, unfoldTree, flatten)
 import Data.Maybe (fromMaybe)
+import Types (DayResult (..))
+
+dayResult :: DayResult
+dayResult = DayResult 4 getResult
 
 type WinningNumbers = [Int]
 type LocalNumbers = [Int]

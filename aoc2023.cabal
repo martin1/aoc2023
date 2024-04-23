@@ -30,6 +30,7 @@ library
       One
       Three
       Two
+      Types
   other-modules:
       Paths_aoc2023
   autogen-modules:

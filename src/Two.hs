@@ -1,7 +1,11 @@
-module Two(getResult) where
+module Two(dayResult) where
 
 import Data.List.Split(splitOn)
 import Data.Bifunctor (Bifunctor(first))
+import Types (DayResult (..))
+
+dayResult :: DayResult
+dayResult = DayResult 2 getResult
 
 data Bag = Bag {
     red :: Int,
