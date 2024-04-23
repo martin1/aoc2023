@@ -6,8 +6,6 @@ import Five(dayResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
 import Types (DayResult(..), DayResults(..))
 import Text.Printf (printf)
-import System.Directory (doesFileExist)
-import Control.Monad (unless)
 
 main :: IO ()
 main = do
@@ -29,9 +27,6 @@ makeTest :: TestData -> IO ()
 makeTest (TestData testName dayRes expected1 expected2) = hspec $ do
     describe testName $ do
         let inputPath = printf "test/input/%d.txt" (dayNo dayRes)
-        fileExists <- runIO $ doesFileExist inputPath
-        unless fileExists $ error $ printf "File does not exist: %s" inputPath
-
         (res1, res2) <- runIO $ getRes dayRes inputPath
         
         it "res1" $ do

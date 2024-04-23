@@ -9,8 +9,6 @@ import Four (dayResult)
 import Five (dayResult)
 import Text.Printf (printf)
 import Types (DayResult(..))
-import System.Directory (doesFileExist)
-import Control.Monad (unless)
 import Data.List (find)
 
 results :: [DayResult]
@@ -38,9 +36,6 @@ main = do
 
 printRes :: DayResult -> String -> IO ()
 printRes dayRes path = do
-    fileExists <- doesFileExist path
-    unless fileExists $ error $ printf "File does not exist: %s" path
-
     (res1, res2) <- getRes dayRes path
     let n = dayNo dayRes
     printf "Day %d part 1:\n%d\nDay %d part 2:\n%d\n" n res1 n res2
