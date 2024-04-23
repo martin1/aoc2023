@@ -11,6 +11,7 @@ import Text.Printf (printf)
 import Types (DayResult(..))
 import System.Directory (doesFileExist)
 import Control.Monad (unless)
+import Data.List (find)
 
 results :: [DayResult]
 results = [
@@ -21,16 +22,13 @@ results = [
     Five.dayResult
     ]
 
-resultMap :: [(Int, DayResult)]
-resultMap = map (\x -> (dayNo x, x)) results
-
 main :: IO ()
 main = do
     args <- getArgs
     case args of
         [num] | [(n,_)] <- (reads num :: [(Int, String)]) ->
             let inputFile = printf "input/%d.txt" n in
-                let dayRes = lookup n resultMap in
+                let dayRes = find (\x -> dayNo x == n) results in
                     case dayRes of
                         Just res -> printRes res inputFile
                         Nothing -> putStrLn "Not implemented"
