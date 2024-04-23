@@ -24,7 +24,6 @@ dependencies:
 - hspec
 - split
 - containers
-- directory
 
 ghc-options:
 - -Wall
