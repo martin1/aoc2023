@@ -1,10 +1,10 @@
 import One(dayResults)
-import Two(getResult)
-import Three(getResult)
-import Four(getResult)
+import Two(dayResult)
+import Three(dayResult)
+import Four(dayResult)
 import Five(dayResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
-import DayResult (DayResult(..), DayResults(..))
+import Types (DayResult(..), DayResults(..))
 
 main :: IO ()
 main = do
@@ -20,14 +20,14 @@ testOne = hspec $ do
     describe "One" $ do
         let dayRes = One.dayResults
         it "res1" $ do
-            (getRes1 dayRes) "test/input/1_1.txt" `shouldReturn` 142
+            getRes1 dayRes "test/input/1_1.txt" `shouldReturn` 142
         it "res2" $ do
-            (getRes2 dayRes) "test/input/1_2.txt" `shouldReturn` 281
+            getRes2 dayRes "test/input/1_2.txt" `shouldReturn` 281
 
 testTwo :: IO ()
 testTwo = hspec $ do
     describe "Two" $ do
-        (res1, res2) <- runIO $ Two.getResult "test/input/2.txt"
+        (res1, res2) <- runIO $ getRes Two.dayResult "test/input/2.txt"
         it "res1" $ do
             res1 `shouldBe` 8
         it "res2" $ do
@@ -36,7 +36,7 @@ testTwo = hspec $ do
 testThree :: IO ()
 testThree = hspec $ do
     describe "Three" $ do
-        (res1, res2) <- runIO $ Three.getResult "test/input/3.txt"
+        (res1, res2) <- runIO $ getRes Three.dayResult "test/input/3.txt"
         it "res1" $ do
             res1 `shouldBe` 4361
         it "res2" $ do
@@ -45,7 +45,7 @@ testThree = hspec $ do
 testFour :: IO ()
 testFour = hspec $ do
     describe "Four" $ do
-        (res1, res2) <- runIO $ Four.getResult "test/input/4.txt"
+        (res1, res2) <- runIO $ getRes Four.dayResult "test/input/4.txt"
         it "res1" $ do
             res1 `shouldBe` 13
         it "res2" $ do
@@ -54,7 +54,7 @@ testFour = hspec $ do
 testFive :: IO ()
 testFive = hspec $ do
     describe "Five" $ do
-        (res1, res2) <- runIO $ (getRes Five.dayResult) "test/input/5.txt"
+        (res1, res2) <- runIO $ getRes Five.dayResult "test/input/5.txt"
         it "res1" $ do
             res1 `shouldBe` 35
         it "res2" $ do

@@ -1,4 +1,4 @@
-module DayResult(DayResult(..), DayResults(..)) where
+module Types(DayResult(..), DayResults(..)) where
 
 newtype DayResult = DayResult {
     getRes :: String -> IO (Int, Int)

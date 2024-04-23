@@ -3,7 +3,7 @@ import Data.Char (isDigit)
 import Data.List (isPrefixOf)
 import Data.Maybe (fromMaybe)
 import Data.List.Split (splitOn)
-import DayResult (DayResult(..))
+import Types (DayResult(..))
 
 dayResult :: DayResult
 dayResult = DayResult getResult

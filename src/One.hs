@@ -1,7 +1,7 @@
 module One (dayResult, dayResults) where
 import Data.Char (isDigit)
 import Data.List (isPrefixOf)
-import DayResult (DayResults (..), DayResult (..))
+import Types (DayResults (..), DayResult (..))
 
 dayResults :: DayResults
 dayResults = DayResults getResult1 getResult2
