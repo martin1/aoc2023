@@ -5,7 +5,7 @@ import Data.Maybe (fromMaybe)
 import Types (DayResult (..))
 
 dayResult :: DayResult
-dayResult = DayResult getResult
+dayResult = DayResult 4 getResult
 
 type WinningNumbers = [Int]
 type LocalNumbers = [Int]

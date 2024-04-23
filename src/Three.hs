@@ -8,7 +8,7 @@ import Data.Maybe (isJust, fromJust)
 import Types (DayResult (..))
 
 dayResult :: DayResult
-dayResult = DayResult getResult
+dayResult = DayResult 3 getResult
 
 data SCoords = SCoords
     { str :: String

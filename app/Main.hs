@@ -9,15 +9,20 @@ import Four (dayResult)
 import Five (dayResult)
 import Text.Printf (printf)
 import Types (DayResult(..))
+import System.Directory (doesFileExist)
+import Control.Monad (unless)
 
-results :: [(Int, DayResult)]
+results :: [DayResult]
 results = [
-    (1, One.dayResult), 
-    (2, Two.dayResult), 
-    (3, Three.dayResult), 
-    (4, Four.dayResult), 
-    (5, Five.dayResult)
+    One.dayResult, 
+    Two.dayResult, 
+    Three.dayResult, 
+    Four.dayResult, 
+    Five.dayResult
     ]
+
+resultMap :: [(Int, DayResult)]
+resultMap = map (\x -> (dayNo x, x)) results
 
 main :: IO ()
 main = do
@@ -25,15 +30,19 @@ main = do
     case args of
         [num] | [(n,_)] <- (reads num :: [(Int, String)]) ->
             let inputFile = printf "input/%d.txt" n in
-                let dayRes = lookup n results in
+                let dayRes = lookup n resultMap in
                     case dayRes of
-                        Just res -> printRes res inputFile n
+                        Just res -> printRes res inputFile
                         Nothing -> putStrLn "Not implemented"
         _ -> do
             name <- getProgName
             hPutStrLn stderr $ "usage: " ++ name ++ " <day-number>"
 
-printRes :: DayResult -> String -> Int -> IO ()
-printRes dayRes path dayNo = do
+printRes :: DayResult -> String -> IO ()
+printRes dayRes path = do
+    fileExists <- doesFileExist path
+    unless fileExists $ error $ printf "File does not exist: %s" path
+
     (res1, res2) <- getRes dayRes path
-    printf "Day %d part 1:\n%d\nDay %d part 2:\n %d" dayNo res1 dayNo res2
+    let n = dayNo dayRes
+    printf "Day %d part 1:\n%d\nDay %d part 2:\n%d\n" n res1 n res2

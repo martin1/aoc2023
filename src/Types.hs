@@ -1,6 +1,7 @@
 module Types(DayResult(..), DayResults(..)) where
 
-newtype DayResult = DayResult {
+data DayResult = DayResult {
+    dayNo :: Int,
     getRes :: String -> IO (Int, Int)
 } 
 

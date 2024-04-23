@@ -5,7 +5,7 @@ import Data.Bifunctor (Bifunctor(first))
 import Types (DayResult (..))
 
 dayResult :: DayResult
-dayResult = DayResult getResult
+dayResult = DayResult 2 getResult
 
 data Bag = Bag {
     red :: Int,

@@ -6,7 +6,7 @@ import Data.List.Split (splitOn)
 import Types (DayResult(..))
 
 dayResult :: DayResult
-dayResult = DayResult getResult
+dayResult = DayResult 5 getResult
 
 
 data MapRange = MapRange {

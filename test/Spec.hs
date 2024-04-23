@@ -5,15 +5,39 @@ import Four(dayResult)
 import Five(dayResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
 import Types (DayResult(..), DayResults(..))
+import Text.Printf (printf)
+import System.Directory (doesFileExist)
+import Control.Monad (unless)
 
 main :: IO ()
 main = do
     testOne
-    testTwo
-    testThree
-    testFour
-    testFive
+    mapM_ makeTest testData
 
+-- test data           -- name  dayRes
+data TestData = TestData String DayResult Int Int
+
+testData :: [TestData]
+testData = [
+    TestData "Two" Two.dayResult 8 2286,
+    TestData "Three" Three.dayResult 4361 467835,
+    TestData "Four" Four.dayResult 13 30,
+    TestData "Five" Five.dayResult 35 46
+    ]
+
+makeTest :: TestData -> IO ()
+makeTest (TestData testName dayRes expected1 expected2) = hspec $ do
+    describe testName $ do
+        let inputPath = printf "test/input/%d.txt" (dayNo dayRes)
+        fileExists <- runIO $ doesFileExist inputPath
+        unless fileExists $ error $ printf "File does not exist: %s" inputPath
+
+        (res1, res2) <- runIO $ getRes dayRes inputPath
+        
+        it "res1" $ do
+            res1 `shouldBe` expected1
+        it "res2" $ do
+            res2 `shouldBe` expected2
 
 testOne :: IO ()
 testOne = hspec $ do
@@ -23,39 +47,3 @@ testOne = hspec $ do
             getRes1 dayRes "test/input/1_1.txt" `shouldReturn` 142
         it "res2" $ do
             getRes2 dayRes "test/input/1_2.txt" `shouldReturn` 281
-
-testTwo :: IO ()
-testTwo = hspec $ do
-    describe "Two" $ do
-        (res1, res2) <- runIO $ getRes Two.dayResult "test/input/2.txt"
-        it "res1" $ do
-            res1 `shouldBe` 8
-        it "res2" $ do
-            res2 `shouldBe` 2286
-
-testThree :: IO ()
-testThree = hspec $ do
-    describe "Three" $ do
-        (res1, res2) <- runIO $ getRes Three.dayResult "test/input/3.txt"
-        it "res1" $ do
-            res1 `shouldBe` 4361
-        it "res2" $ do
-            res2 `shouldBe` 467835
-
-testFour :: IO ()
-testFour = hspec $ do
-    describe "Four" $ do
-        (res1, res2) <- runIO $ getRes Four.dayResult "test/input/4.txt"
-        it "res1" $ do
-            res1 `shouldBe` 13
-        it "res2" $ do
-            res2 `shouldBe` 30
-
-testFive :: IO ()
-testFive = hspec $ do
-    describe "Five" $ do
-        (res1, res2) <- runIO $ getRes Five.dayResult "test/input/5.txt"
-        it "res1" $ do
-            res1 `shouldBe` 35
-        it "res2" $ do
-            res2 `shouldBe` 46

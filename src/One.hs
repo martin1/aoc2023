@@ -7,7 +7,7 @@ dayResults :: DayResults
 dayResults = DayResults getResult1 getResult2
 
 dayResult :: DayResult
-dayResult = DayResult getResult
+dayResult = DayResult 1 getResult
 
 getResult1 :: String -> IO Int
 getResult1 path = sum . fmap getCalVal . lines <$> readFile path
