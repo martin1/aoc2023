@@ -14,7 +14,7 @@ main = do
     testOne
     mapM_ makeTest testData
 
--- test data           -- name  dayRes
+-- test data - name, dayResult, expected1, expected2
 data TestData = TestData String DayResult Int Int
 
 testData :: [TestData]
