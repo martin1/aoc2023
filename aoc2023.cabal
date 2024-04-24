@@ -27,6 +27,7 @@ library
   exposed-modules:
       Five
       Four
+      Lib
       One
       Six
       Three
