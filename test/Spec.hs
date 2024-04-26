@@ -3,6 +3,7 @@ import Two(dayResult)
 import Three(dayResult)
 import Four(dayResult)
 import Five(dayResult)
+import Six(dayResult)
 import Test.Hspec ( hspec, describe, it, shouldReturn, shouldBe, runIO )
 import Types (DayResult(..), DayResults(..))
 import Text.Printf (printf)
@@ -20,7 +21,8 @@ testData = [
     TestData "Two" Two.dayResult 8 2286,
     TestData "Three" Three.dayResult 4361 467835,
     TestData "Four" Four.dayResult 13 30,
-    TestData "Five" Five.dayResult 35 46
+    TestData "Five" Five.dayResult 35 46,
+    TestData "Six" Six.dayResult 288 0
     ]
 
 makeTest :: TestData -> IO ()
