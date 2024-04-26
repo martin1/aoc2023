@@ -1,9 +1,9 @@
 module Five (dayResult) where
-import Data.Char (isDigit)
 import Data.List (isPrefixOf)
 import Data.Maybe (fromMaybe)
 import Data.List.Split (splitOn)
 import Types (DayResult(..))
+import Lib (getNumbers)
 
 dayResult :: DayResult
 dayResult = DayResult 5 getResult
@@ -60,9 +60,6 @@ makeSeedList [] = []
 makeSeedList [a] = [Seeds {start = a, count = 1}]
 makeSeedList [a,b] = [Seeds {start = a, count = b}]
 makeSeedList (a:b:rest) = Seeds {start = a, count = b} : makeSeedList rest
-
-getNumbers :: String -> [Int]
-getNumbers s = map read $ filter (all isDigit) $ words s
 
 getMapRange :: String -> MapRange
 getMapRange s = if length nums /= 3
