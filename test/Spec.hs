@@ -22,7 +22,7 @@ testData = [
     TestData "Three" Three.dayResult 4361 467835,
     TestData "Four" Four.dayResult 13 30,
     TestData "Five" Five.dayResult 35 46,
-    TestData "Six" Six.dayResult 288 0
+    TestData "Six" Six.dayResult 288 71503
     ]
 
 makeTest :: TestData -> IO ()
