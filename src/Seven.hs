@@ -12,7 +12,20 @@ getResult path = do
     ls <- lines <$> readFile path
     return (0, 0)
 
-type Hand = String
+newtype Hand = Hand String deriving (Eq, Show)
+
+instance Ord Hand where
+    compare h1 h2 = case compare h1Type h2Type of
+        GT -> GT
+        LT -> LT
+        EQ -> case compareCards h1 h2 of
+            GT -> GT
+            LT -> LT
+            EQ -> GT
+        where
+            h1Type = getHandType h1
+            h2Type = getHandType h2
+
 data HandType = HighCard | OnePair | TwoPair | ThreeOfAKind | FullHouse | FourOfAKind | FiveOfAKind deriving (Eq, Ord, Show)
 
 cards :: [Char]
@@ -20,11 +33,11 @@ cards = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 
 validateHand :: String -> Maybe Hand
 validateHand s = if length s == 5 && all (`elem` cards) s
-    then Just s
+    then Just $ Hand s
     else Nothing
 
 getHandType :: Hand -> HandType
-getHandType h = case length charCounts of
+getHandType (Hand h) = case length charCounts of
     1 -> FiveOfAKind
     2 -> if any ((==4) . snd) charCounts
              then FourOfAKind
@@ -39,25 +52,13 @@ getHandType h = case length charCounts of
         charCounts :: [(Char, Int)]
         charCounts = map (\c -> (c, length $ filter (==c) h)) $ nubOrd h
 
-getStrongerHand :: Hand -> Hand -> Hand
-getStrongerHand h1 h2 = case compare h1Type h2Type of
-    GT -> h1
-    LT -> h2
-    EQ -> case compareCards h1 h2 of
-        GT -> h1
-        LT -> h2
-        EQ -> h1
-    where
-        h1Type = getHandType h1
-        h2Type = getHandType h2
-
 compareCards :: Hand -> Hand -> Ordering
-compareCards [] _ = EQ
-compareCards _ [] = EQ
-compareCards (x:xs) (y:ys) = case compare xi yi of
+compareCards (Hand []) _ = EQ
+compareCards _ (Hand []) = EQ
+compareCards (Hand (x:xs)) (Hand (y:ys)) = case compare xi yi of
     GT -> GT
     LT -> LT
-    EQ -> compareCards xs ys
+    EQ -> compareCards (Hand xs) (Hand ys)
     where
         xi = fromJust $ elemIndex x cards
         yi = fromJust $ elemIndex y cards
