@@ -8,7 +8,9 @@ dayResult :: DayResult
 dayResult = DayResult 7 getResult
 
 getResult :: String -> IO (Int, Int)
-getResult path = return (0, 0)
+getResult path = do
+    ls <- lines <$> readFile path
+    return (0, 0)
 
 type Hand = String
 data HandType = HighCard | OnePair | TwoPair | ThreeOfAKind | FullHouse | FourOfAKind | FiveOfAKind deriving (Eq, Ord, Show)
@@ -60,4 +62,19 @@ compareCards (x:xs) (y:ys) = case compare xi yi of
         xi = fromJust $ elemIndex x cards
         yi = fromJust $ elemIndex y cards
 
+getHandAndBid :: String -> (Hand, Int)
+getHandAndBid s = (h, b)
+    where
+        ws = words s
+        h = fromJust $ validateHand $ head ws
+        b = read $ last ws
 
+
+ls :: [String]
+ls = [
+    "32T3K 765",
+    "T55J5 684",
+    "KK677 28",
+    "KTJJT 220",
+    "QQQJA 483"
+    ]
