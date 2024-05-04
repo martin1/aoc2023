@@ -8,6 +8,7 @@ import Three (dayResult)
 import Four (dayResult)
 import Five (dayResult)
 import Six (dayResult)
+import Seven (dayResult)
 import Text.Printf (printf)
 import Types (DayResult(..))
 import Data.List (find)
@@ -19,7 +20,8 @@ results = [
     Three.dayResult, 
     Four.dayResult, 
     Five.dayResult,
-    Six.dayResult
+    Six.dayResult,
+    Seven.dayResult
     ]
 
 main :: IO ()

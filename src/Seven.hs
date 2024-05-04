@@ -1,7 +1,7 @@
 module Seven(dayResult) where
 import Types (DayResult (..))
 import Data.Containers.ListUtils (nubOrd)
-import Data.List (elemIndex)
+import Data.List ( elemIndex, sortOn )
 import Data.Maybe (fromJust)
 
 dayResult :: DayResult
@@ -10,7 +10,10 @@ dayResult = DayResult 7 getResult
 getResult :: String -> IO (Int, Int)
 getResult path = do
     ls <- lines <$> readFile path
-    return (0, 0)
+    let handBids = map getHandAndBid ls
+    let sortedBids = map snd $ sortOn fst handBids
+    let res1 = foldr (\(a, b) acc -> acc + (a * b)) 0 (zip sortedBids [1..])
+    return (res1, 0)
 
 newtype Hand = Hand String deriving (Eq, Show)
 
@@ -69,13 +72,3 @@ getHandAndBid s = (h, b)
         ws = words s
         h = fromJust $ validateHand $ head ws
         b = read $ last ws
-
-
-ls :: [String]
-ls = [
-    "32T3K 765",
-    "T55J5 684",
-    "KK677 28",
-    "KTJJT 220",
-    "QQQJA 483"
-    ]
