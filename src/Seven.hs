@@ -10,12 +10,12 @@ dayResult = DayResult 7 getResult
 getResult :: String -> IO (Int, Int)
 getResult path = do
     ls <- lines <$> readFile path
-    let handBids = map getHandAndBid ls
+    let handBids = map (`getHandAndBid` False) ls
     let sortedBids = map snd $ sortOn fst handBids
     let res1 = foldr (\(a, b) acc -> acc + (a * b)) 0 (zip sortedBids [1..])
     return (res1, 0)
 
-newtype Hand = Hand String deriving (Eq, Show)
+data Hand = Hand String Bool deriving (Eq, Show)
 
 instance Ord Hand where
     compare h1 h2 = case compare h1Type h2Type of
@@ -31,16 +31,17 @@ instance Ord Hand where
 
 data HandType = HighCard | OnePair | TwoPair | ThreeOfAKind | FullHouse | FourOfAKind | FiveOfAKind deriving (Eq, Ord, Show)
 
+
 cards :: [Char]
 cards = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 
-validateHand :: String -> Maybe Hand
-validateHand s = if length s == 5 && all (`elem` cards) s
-    then Just $ Hand s
+validateHand :: String -> Bool -> Maybe Hand
+validateHand s isJ = if length s == 5 && all (`elem` cards) s
+    then Just $ Hand s isJ
     else Nothing
 
 getHandType :: Hand -> HandType
-getHandType (Hand h) = case length charCounts of
+getHandType (Hand h isJ) = case length charCounts of
     1 -> FiveOfAKind
     2 -> if any ((==4) . snd) charCounts
              then FourOfAKind
@@ -52,23 +53,30 @@ getHandType (Hand h) = case length charCounts of
     5 -> HighCard
     _ -> error "Invalid hand"
     where
+        hand = if isJ
+            then
+                let maxIndex = maximum $ map (fromJust . (`elemIndex` cards)) h
+                    replaceJ 'J' = cards !! maxIndex
+                    replaceJ c = c
+                in map replaceJ h
+            else h
         charCounts :: [(Char, Int)]
-        charCounts = map (\c -> (c, length $ filter (==c) h)) $ nubOrd h
+        charCounts = map (\c -> (c, length $ filter (==c) h)) $ nubOrd hand
 
 compareCards :: Hand -> Hand -> Ordering
-compareCards (Hand []) _ = EQ
-compareCards _ (Hand []) = EQ
-compareCards (Hand (x:xs)) (Hand (y:ys)) = case compare xi yi of
+compareCards (Hand [] _) _ = EQ
+compareCards _ (Hand [] _) = EQ
+compareCards (Hand (x:xs) isJ) (Hand (y:ys) isJ') = case compare xi yi of
     GT -> GT
     LT -> LT
-    EQ -> compareCards (Hand xs) (Hand ys)
+    EQ -> compareCards (Hand xs isJ) (Hand ys isJ)
     where
         xi = fromJust $ elemIndex x cards
         yi = fromJust $ elemIndex y cards
 
-getHandAndBid :: String -> (Hand, Int)
-getHandAndBid s = (h, b)
+getHandAndBid :: String -> Bool -> (Hand, Int)
+getHandAndBid s isJ = (h, b)
     where
         ws = words s
-        h = fromJust $ validateHand $ head ws
+        h = fromJust $ validateHand (head ws) isJ
         b = read $ last ws
