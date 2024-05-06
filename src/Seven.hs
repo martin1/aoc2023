@@ -1,8 +1,9 @@
 module Seven(dayResult) where
 import Types (DayResult (..))
-import Data.Containers.ListUtils (nubOrd)
 import Data.List ( elemIndex, sortOn )
 import Data.Maybe (fromJust)
+import Data.Ord ( Down(Down) )
+import Data.Containers.ListUtils (nubOrd)
 
 dayResult :: DayResult
 dayResult = DayResult 7 getResult
@@ -45,28 +46,37 @@ validateHand s applyJ = if length s == 5 && all (`elem` cards) s
     else Nothing
 
 getHandType :: Hand -> HandType
-getHandType (Hand h applyJ) = case length charCounts of
+getHandType (Hand h applyJ) = case length $ freqList hand of
     1 -> FiveOfAKind
-    2 -> if any ((==4) . snd) charCounts
+    2 -> if any ((==4) . snd) $ freqList hand
              then FourOfAKind
              else FullHouse
-    3 -> if any ((==3) . snd) charCounts
+    3 -> if any ((==3) . snd) $ freqList hand
             then ThreeOfAKind
             else TwoPair
     4 -> OnePair
     5 -> HighCard
     _ -> error "Invalid hand"
     where
-        hand = if applyJ
+        hand = if applyJ && not (all (=='J') h)
             then
-                let maxIndex = maximum $ map (fromJust . (`elemIndex` cards)) h
-                    replaceJ c = if c == 'J' 
-                        then cards !! maxIndex 
+                let char = mostFrequentChar $ filter (/= 'J') h
+                    replaceJ c = if c == 'J'
+                        then char
                         else c
                 in map replaceJ h
             else h
-        charCounts :: [(Char, Int)]
-        charCounts = map (\c -> (c, length $ filter (==c) hand)) $ nubOrd hand
+
+mostFrequentChar :: String -> Char
+mostFrequentChar s = head (maxByFreq s)
+  where
+    maxByFreq :: String -> [Char]
+    maxByFreq = map fst . sortOn (Down . snd) . freqList
+
+
+freqList :: String -> [(Char, Int)]
+freqList s = map (\c -> (c, length $ filter (==c) s)) $ nubOrd s
+
 
 compareCards :: Hand -> Hand -> Ordering
 compareCards (Hand [] _) _ = EQ
