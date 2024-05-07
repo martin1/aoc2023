@@ -6,19 +6,22 @@ import Data.Ord ( Down(Down) )
 import Data.Containers.ListUtils (nubOrd)
 
 dayResult :: DayResult
-dayResult = DayResult 7 getResult
+dayResult = DayResult 7 getResults
 
-getResult :: String -> IO (Int, Int)
-getResult path = do
+getResults :: String -> IO (Int, Int)
+getResults path = do
     ls <- lines <$> readFile path
-    let handBids = map (`getHandAndBid` False) ls
-    let sortedBids = map snd $ sortOn fst handBids
-    let res1 = foldr (\(a, b) acc -> acc + (a * b)) 0 (zip sortedBids [1..])
 
-    let handBids' = map (`getHandAndBid` True) ls
-    let sortedBids' = map snd $ sortOn fst handBids'
-    let res2 = foldr (\(a, b) acc -> acc + (a * b)) 0 (zip sortedBids' [1..])
+    let res1 = getResult ls False
+    let res2 = getResult ls True
     return (res1, res2)
+
+getResult :: [String] -> Bool -> Int
+getResult ls applyJ = foldr (\(a, b) acc -> acc + (a * b)) 0 (zip sortedBids [1..])
+    where
+        handBids = map (`getHandAndBid` applyJ) ls
+        sortedBids = map snd $ sortOn fst handBids
+        
 
 data Hand = Hand String Bool deriving (Eq, Show)
 
