@@ -46,6 +46,7 @@ library
       base >=4.7 && <5
     , containers
     , hspec
+    , parsec
     , split
   default-language: Haskell2010
 
@@ -63,6 +64,7 @@ executable aoc2023-exe
     , base >=4.7 && <5
     , containers
     , hspec
+    , parsec
     , split
   default-language: Haskell2010
 
@@ -81,5 +83,6 @@ test-suite aoc2023-test
     , base >=4.7 && <5
     , containers
     , hspec
+    , parsec
     , split
   default-language: Haskell2010
