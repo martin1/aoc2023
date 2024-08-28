@@ -9,6 +9,10 @@ dayResult = DayResult 8 getResults
 getResults :: String -> IO (Int, Int)
 getResults _ = return (0, 0)
 
+funcMap :: [(Char, (a, a) -> a)]
+funcMap = [('L', fst), ('R', snd)]
+
+
 kvpParser :: Parser (String, (String, String))
 kvpParser = do
     key <- many1 letter
