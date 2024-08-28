@@ -16,12 +16,12 @@ funcMap = [('L', fst), ('R', snd)]
 moves :: [Char] -> [(a, a) -> a]
 moves = map (\c -> fromJust $ lookup c funcMap)
 
-parseKeyValue :: String -> (String, (String, String))
-parseKeyValue s = case parseLine s of
+parseLine :: String -> (String, (String, String))
+parseLine s = case parseLn s of
   Right (key, (a, b)) -> (key, (a, b))
   Left err -> error $ show err
-  where 
-    parseLine = parse keyValueParser ""
+  where
+    parseLn = parse keyValueParser ""
 
 
 keyValueParser :: Parser (String, (String, String))
