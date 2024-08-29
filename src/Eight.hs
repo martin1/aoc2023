@@ -3,6 +3,7 @@ import Types (DayResult(..))
 import Text.Parsec ( char, letter, string, many1, parse)
 import Text.Parsec.String ( Parser )
 import Data.Maybe (fromJust)
+import Data.List (unfoldr)
 
 dayResult :: DayResult
 dayResult = DayResult 8 getResults
@@ -14,8 +15,16 @@ getResults path = do
   let dataStrs = filter (not . null) $ tail ls
   let dict = map parseLine dataStrs
   let moves = getMoves $ cycle moveStr
-  -- TODO: unfoldr
   return (0, 0)
+
+getPath :: [(String, String) -> String] -> [(String, (String, String))] -> [String]
+getPath moves dict = unfoldr f (fst $ head dict, moves)
+  where
+    f (_, []) = Nothing
+    f (b, m:ms) = if b == "ZZZ" then Nothing else Just (v, (v, ms))
+      where 
+        v = m $ fromJust $ lookup b dict
+
 
 getMoves :: [Char] -> [(a, a) -> a]
 getMoves = map (\c -> fromJust $ lookup c funcMap)
