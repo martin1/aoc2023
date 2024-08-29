@@ -4,26 +4,29 @@ import Text.Parsec ( char, letter, string, many1, parse)
 import Text.Parsec.String ( Parser )
 import Data.Maybe (fromJust)
 import Data.List (unfoldr)
+import qualified Data.Map.Strict as Map
 
 dayResult :: DayResult
 dayResult = DayResult 8 getResults
+
+type Dictionary = Map.Map String (String, String)
 
 getResults :: String -> IO (Int, Int)
 getResults path = do
   ls <- lines <$> readFile path
   let moveStr = head ls
   let dataStrs = filter (not . null) $ tail ls
-  let dict = map parseLine dataStrs
+  let dict = Map.fromList $ map parseLine dataStrs
   let moves = getMoves $ cycle moveStr
-  return (0, 0)
+  return (moveCount moves dict, 0)
 
-getPath :: [(String, String) -> String] -> [(String, (String, String))] -> [String]
-getPath moves dict = unfoldr f (fst $ head dict, moves)
+moveCount :: [(String, String) -> String] -> Dictionary -> Int
+moveCount moves dict = length $ unfoldr f (head $ Map.keys dict, moves)
   where
     f (_, []) = Nothing
     f (b, m:ms) = if b == "ZZZ" then Nothing else Just (v, (v, ms))
       where 
-        v = m $ fromJust $ lookup b dict
+        v = m $ fromJust $ Map.lookup b dict
 
 
 getMoves :: [Char] -> [(a, a) -> a]
