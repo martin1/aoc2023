@@ -33,7 +33,7 @@ testData1 = [
 testData2 :: [TestData2]
 testData2 = [
     TestData2 1 "One" One.dayResults 142 281,
-    TestData2 8 "Eight" Eight.dayResults 6 0
+    TestData2 8 "Eight" Eight.dayResults 6 6
     ]
 
 makeOneFileTest :: TestData1 -> IO ()
@@ -48,10 +48,10 @@ makeOneFileTest (TestData1 testName dayRes expected1 expected2) = hspec $ do
             res2 `shouldBe` expected2
 
 makeTwoFileTest :: TestData2 -> IO()
-makeTwoFileTest (TestData2 dayNo testName dayRes expected1 expected2) = hspec $ do
+makeTwoFileTest (TestData2 dayNum testName dayRes expected1 expected2) = hspec $ do
     describe testName $ do
-        let inputPath1 = printf "test/input/%d_1.txt" dayNo
-        let inputPath2 = printf "test/input/%d_2.txt" dayNo
+        let inputPath1 = printf "test/input/%d_1.txt" dayNum
+        let inputPath2 = printf "test/input/%d_2.txt" dayNum
 
         res1 <- runIO $ getRes1 dayRes inputPath1
         res2 <- runIO $ getRes2 dayRes inputPath2
