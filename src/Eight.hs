@@ -12,7 +12,7 @@ dayResults = DayResults getResult1 getResult2
 getResult1 :: String -> IO Int
 getResult1 path = do
   (dict, moves) <- getData path
-  return $ moveCount1 moves dict
+  return $ moveCount1 moves dict (head $ Map.keys dict)
 
 getResult2 :: String -> IO Int
 getResult2 path = do
@@ -25,7 +25,7 @@ dayResult = DayResult 8 getResults
 getResults :: String -> IO (Int, Int)
 getResults path = do
   (dict, moves) <- getData path
-  let res1 = moveCount1 moves dict
+  let res1 = moveCount1 moves dict (head $ Map.keys dict)
   let res2 = moveCount2 moves dict
   return (res1, res2)
 
@@ -40,24 +40,20 @@ getData path = do
   let dict = Map.fromList $ map parseLine dataStrs
   return (dict, getMoves $ cycle moveStr)
 
-moveCount1 :: Moves -> Dictionary -> Int
-moveCount1 moves dict = sum $ unfoldr f (head $ Map.keys dict, moves)
+moveCount1 :: Moves -> Dictionary -> String -> Int
+moveCount1 moves dict startVal = sum $ unfoldr f (startVal, moves)
   where
     f :: (String, Moves) -> Maybe (Int, (String, Moves))
     f (_, []) = Nothing
-    f (b, m:ms) = if b == "ZZZ" then Nothing else Just (1, (v, ms))
+    f (b, m:ms) = if "Z" `isSuffixOf` b then Nothing else Just (1, (v, ms))
       where
         v = m $ fromJust $ Map.lookup b dict
 
 moveCount2 :: Moves -> Dictionary -> Int
-moveCount2 moves dict = sum $ unfoldr f (startVals, moves)
+moveCount2 moves dict = foldl lcm 1 vs --lcm - least common multiplier
   where
     startVals = filter (isSuffixOf "A") (Map.keys dict)
-    f :: ([String], Moves) -> Maybe (Int, ([String], Moves))
-    f (_, []) = Nothing
-    f (bs, m:ms) = if all (isSuffixOf "Z") bs then Nothing else Just (1, (vals, ms))
-      where
-        vals = map (\b -> m $ fromJust $ Map.lookup b dict) bs
+    vs = map (moveCount1 moves dict) startVals
 
 getMoves :: [Char] -> [(a, a) -> a]
 getMoves = map (\c -> fromJust $ lookup c funcMap)
