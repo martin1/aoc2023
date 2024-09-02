@@ -24,6 +24,7 @@ dependencies:
 - hspec
 - split
 - containers
+- parsec
 
 ghc-options:
 - -Wall
